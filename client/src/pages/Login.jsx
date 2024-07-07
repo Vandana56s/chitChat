@@ -1,11 +1,36 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Avatar, Button, Container, IconButton, Paper, TextField, Typography, Stack } from '@mui/material';
 import { CameraAlt as CameraAltIcon } from '@mui/icons-material';
+import { VisuallyHiddenInput } from '../components/styles/styledComponents';
+import useInputValidation from '../hooks/useInputValidation';
+import useStrongPassword from '../hooks/useStrongPassword';
+import useFileHandler from '../hooks/useFileHandler';
+import { usernameValidator } from '../utils/validators';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const fileInputRef = useRef(null);
 
   const toggleLogin = () => setIsLogin((prev) => !prev);
+  const name = useInputValidation("");
+  const bio = useInputValidation("");
+  const username = useInputValidation("", usernameValidator);
+  const password = useStrongPassword("");
+  const avatar = useFileHandler();
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    console.log('Logging in with', { username: username.value, password: password.value });
+  };
+
+  const handleSignup = (e) => {
+    e.preventDefault();
+    console.log('Signing up with', { name: name.value, bio: bio.value, username: username.value, password: password.value, avatar: avatar.file });
+  };
+
+  const handleIconClick = () => {
+    fileInputRef.current.click();
+  };
 
   return (
     <Container
@@ -30,14 +55,21 @@ const Login = () => {
         {isLogin ? (
           <>
             <Typography variant="h5">Login</Typography>
-            <form>
+            <form onSubmit={handleLogin}>
               <TextField
                 required
                 fullWidth
                 label="Username"
                 margin="normal"
                 variant="outlined"
+                value={username.value}
+                onChange={username.changeHandler}
               />
+              {username.error && (
+                <Typography color="error" variant="caption">
+                  {username.error}
+                </Typography>
+              )}
               <TextField
                 required
                 fullWidth
@@ -45,7 +77,14 @@ const Login = () => {
                 type="password"
                 margin="normal"
                 variant="outlined"
+                value={password.value}
+                onChange={password.changeHandler}
               />
+              {password.error && (
+                <Typography color="error" variant="caption">
+                  {password.error}
+                </Typography>
+              )}
               <Button
                 fullWidth
                 sx={{
@@ -73,12 +112,7 @@ const Login = () => {
         ) : (
           <>
             <Typography variant="h5">Sign Up</Typography>
-            <form
-              style={{
-                width: '100%',
-                marginTop: '1rem',
-              }}
-            >
+            <form onSubmit={handleSignup} style={{ width: '100%', marginTop: '1rem' }}>
               <Stack position="relative" width="10rem" margin="auto">
                 <Avatar
                   sx={{
@@ -86,7 +120,13 @@ const Login = () => {
                     height: '10rem',
                     objectFit: 'contain',
                   }}
+                  src={avatar.preview}
                 />
+                {avatar.error && (
+                  <Typography m={'1rem'} color="error" variant="caption">
+                    {avatar.error}
+                  </Typography>
+                )}
                 <IconButton
                   aria-label="upload avatar"
                   sx={{
@@ -94,8 +134,14 @@ const Login = () => {
                     bottom: 0,
                     right: 0,
                   }}
+                  onClick={handleIconClick}
                 >
                   <CameraAltIcon />
+                  <VisuallyHiddenInput
+                    ref={fileInputRef}
+                    type="file"
+                    onChange={avatar.changeHandler}
+                  />
                 </IconButton>
               </Stack>
               <TextField
@@ -104,6 +150,8 @@ const Login = () => {
                 label="Name"
                 margin="normal"
                 variant="outlined"
+                value={name.value}
+                onChange={name.changeHandler}
               />
               <TextField
                 required
@@ -111,6 +159,8 @@ const Login = () => {
                 label="Bio"
                 margin="normal"
                 variant="outlined"
+                value={bio.value}
+                onChange={bio.changeHandler}
               />
               <TextField
                 required
@@ -118,7 +168,14 @@ const Login = () => {
                 label="Username"
                 margin="normal"
                 variant="outlined"
+                value={username.value}
+                onChange={username.changeHandler}
               />
+              {username.error && (
+                <Typography color="error" variant="caption">
+                  {username.error}
+                </Typography>
+              )}
               <TextField
                 required
                 fullWidth
@@ -126,7 +183,14 @@ const Login = () => {
                 type="password"
                 margin="normal"
                 variant="outlined"
+                value={password.value}
+                onChange={password.changeHandler}
               />
+              {password.error && (
+                <Typography color="error" variant="caption">
+                  {password.error}
+                </Typography>
+              )}
               <Button
                 fullWidth
                 sx={{
