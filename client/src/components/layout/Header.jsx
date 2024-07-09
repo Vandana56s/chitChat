@@ -10,10 +10,10 @@ const NewGroupDialog = React.lazy(() => import("../specific/NewGroup"));
 
 const Header = () => {
     const navigate = useNavigate();
-    const [IsMobile, setIsMobile] = useState(false);
-    const [IsSearch, setIsSearch] = useState(false);
-    const [IsNewGroup, setIsNewGroup] = useState(false);
-    const [IsNotification, setIsNotification] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+    const [isSearch, setIsSearch] = useState(false);
+    const [isNewGroup, setIsNewGroup] = useState(false);
+    const [isNotification, setIsNotification] = useState(false);
 
     const handleMobile = () => {
         setIsMobile(prev => !prev);
@@ -89,19 +89,19 @@ const Header = () => {
                     </Box>
                 </Toolbar>
             </AppBar>
-            {IsSearch && (
+            {isSearch && (
                 <Suspense fallback={<div>Loading...</div>}>
                     <SearchDialog />
                 </Suspense>
             )}
-            {IsNotification && (
+            {isNotification && (
                 <Suspense fallback={<div>Loading...</div>}>
-                    <NewGroupDialog />
+                    <NotificationsDialog />
                 </Suspense>
             )}
-            {IsNewGroup && (
+            {isNewGroup && (
                 <Suspense fallback={<div>Loading...</div>}>
-                    <NewGroupDialog/>
+                    <NewGroupDialog />
                 </Suspense>
             )}
         </Box>
