@@ -1,3 +1,26 @@
+import { styled } from '@mui/material/styles';
+import { Link as LinkComponent } from 'react-router-dom';
+
+export const VisuallyHiddenInput = styled('input')({
+  border: 0,
+  clip: 'rect(0 0 0 0)',
+  height: 1,
+  margin: -1,
+  overflow: 'hidden',
+  position: 'absolute',
+  whiteSpace: 'nowrap',
+  width: 1,
+});
+
+export const Link = styled(LinkComponent)`
+  text-decoration: none;
+  color: black;
+  padding: 1rem;
+  &:hover {
+    background-color: #f0f0f0;
+  }
+`;
+
 export const sampleChats = [
   {
     avatar: ["https://cdn.pixabay.com/photo/2014/04/03/10/32/user-310807_1280.png"],
