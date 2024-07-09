@@ -20,17 +20,26 @@ const AppLayout = (WrappedComponent) => {
       <div className="app-layout">
         <Header />
         <Grid container style={{ height: "calc(100vh - 4rem)" }}>
+          {/* ChatList Section */}
           <Grid item xs={12} md={4} height={"100%"} sx={{ bgcolor: '#899499', display: 'flex', alignItems: 'flex-start', justifyContent: 'center' }}>
             <ChatList chats={sampleChats} chatId={chatId} handleDeleteChat={handleDeleteChat} />
           </Grid>
-          <Grid item xs={12} md={4} height={"100%"} sx={{ bgcolor: '#D3D3D3', display: 'flex', alignItems: 'flex-start', justifyContent: 'center' }}>
+
+          {/* WrappedComponent Section */}
+          <Grid item xs={12} md={4} height={"100%"} sx={{ bgcolor: '#8A9A5B', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <WrappedComponent {...props} />
           </Grid>
+
+          {/* Profile Section */}
           <Grid item xs={12} md={4} height={"100%"} sx={{ bgcolor: '#36454F', display: 'flex', alignItems: 'flex-start', justifyContent: 'center' }}>
             <Profile />
           </Grid>
         </Grid>
+
+        {/* Footer Section */}
         <div className="footer">Footer</div>
+
+        {/* Inline styles for the component */}
         <style jsx>{`
           .app-layout {
             display: flex;

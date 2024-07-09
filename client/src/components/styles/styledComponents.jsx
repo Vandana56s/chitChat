@@ -1,5 +1,6 @@
 import { styled } from '@mui/material/styles';
 import { Link as LinkComponent } from 'react-router-dom';
+import { grayColor, orange } from '../../constants/color';
 
 export const VisuallyHiddenInput = styled('input')({
   border: 0,
@@ -20,6 +21,16 @@ export const Link = styled(LinkComponent)`
     background-color: #f0f0f0;
   }
 `;
+export const InputBox = styled("input")`
+  width: 100%;
+  height:100%;
+  border:none;
+  outline:none;
+  padding: 0.3rem;
+  border_radius:1.5rem;
+  background-color:${grayColor};
+`;
+
 
 export const sampleChats = [
   {
@@ -86,3 +97,38 @@ export const sampleNotifications = [
     _id: "3",
   }
 ];
+export const sampleMessage = [
+  {
+    attachments: [
+     // {
+      //  public_id: "ashdjd",
+       // url: "https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359554_1280.png",
+     // }
+    ],
+    content: "hi sakshi! abe ush din wali pic send krna .",
+    _id: "dfddjdndbdbdbd",
+    sender: {
+      _id: "user.id",
+      name: "vandana",
+    },
+    chat: "chatId",
+    createdAt: "2024-03-12T10:41:30.630Z" // Corrected createdAt key
+  },
+  {
+    attachments: [
+      {
+        public_id: "ashdjd",
+        url: "https://cdn.pixabay.com/photo/2014/04/03/10/32/user-310807_1280.png",
+      }
+    ],
+    content: "",
+    _id: "dfddjdndbdbdbd",
+    sender: {
+      _id: "dfdfdfd",
+      name: "chaman 2",
+    },
+    chat: "chatId",
+    createdAt: "2024-03-12T10:41:30.630Z" // Corrected createdAt key
+  }
+];
+
