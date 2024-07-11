@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
 import { Link as LinkComponent } from 'react-router-dom';
-import { grayColor, orange } from '../../constants/color';
+import { grayColor } from '../../constants/color';
 
 export const VisuallyHiddenInput = styled('input')({
   border: 0,
@@ -21,14 +21,40 @@ export const Link = styled(LinkComponent)`
     background-color: #f0f0f0;
   }
 `;
+
 export const InputBox = styled("input")`
   width: 100%;
-  height:100%;
-  border:none;
-  outline:none;
+  height: 100%;
+  border: none;
+  outline: none;
   padding: 0.3rem;
-  border_radius:1.5rem;
-  background-color:${grayColor};
+  border-radius: 1.5rem;
+  background-color: ${grayColor};
+`;
+
+export const SearchField = styled("input")`
+  width: 20vmax;
+  border: none;
+  outline: none;
+  padding: 1rem 2rem;
+  border-radius: 1.5rem;
+  background-color: ${grayColor};
+  font-size: 1.1rem;
+`;
+
+export const CurveButton = styled("button")`
+  width: 20vmax;
+  border: none;
+  outline: none;
+  padding: 1rem 2rem;
+  cursor: pointer;
+  border-radius: 1.5rem;
+  color: white;
+  background-color: black;
+  font-size: 1.1rem;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
 `;
 
 
@@ -131,4 +157,28 @@ export const sampleMessage = [
     createdAt: "2024-03-12T10:41:30.630Z" // Corrected createdAt key
   }
 ];
+
+// Corrected dashboardData export
+  export const dashboardData = {
+  users: [
+    {
+      name: "sakshi",
+      avatar: "https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359554_1280.png",
+      _id: "1",
+      username: "sakshi_rai",
+      friends: 20,
+      groups: 5,
+    },
+    {
+      name: "vandana",
+      avatar: "https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359554_1280.png",
+      _id: "2",
+      username: "vandana",
+      friends: 100,
+      groups: 50,
+    },
+  ],
+};
+
+
 
