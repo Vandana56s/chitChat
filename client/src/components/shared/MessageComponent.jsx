@@ -1,59 +1,64 @@
-import React, { memo } from 'react';
-import { Box, Typography } from '@mui/material';
-import moment from 'moment';
-import { Attachment } from '@mui/icons-material';
-import { fileFormat } from '../../lib/features';
-import RenderAttachment from './RenderAttachment';
+import { Box, Typography } from "@mui/material";
+import React, { memo } from "react";
+import { lightBlue } from "../../constants/color";
+import moment from "moment";
+import { fileFormat } from "../../lib/features";
+import RenderAttachment from "./RenderAttachment";
+import { motion } from "framer-motion";
 
 const MessageComponent = ({ message, user }) => {
   const { sender, content, attachments = [], createdAt } = message;
+
   const sameSender = sender?._id === user?._id;
+
   const timeAgo = moment(createdAt).fromNow();
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, x: "-100%" }}
+      whileInView={{ opacity: 1, x: 0 }}
       style={{
-        alignSelf: sameSender ? "flex-end" : "flex-start", // Adjust alignment based on sender
-        backgroundColor: sameSender ? "#DCF8C6" : "white",
-        color: sameSender ? "black" : "black",
+        alignSelf: sameSender ? "flex-end" : "flex-start",
+        backgroundColor: "white",
+        color: "black",
         borderRadius: "5px",
-        padding: "0.1rem",
-        maxWidth: "60%", // Limit the max width of the message
-        margin: "0.5rem",
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: sameSender ? 'flex-end' : 'flex-start',
+        padding: "0.5rem",
+        width: "fit-content",
       }}
     >
       {!sameSender && (
-        <Typography color={"#6082B6"} fontWeight={"600"} variant="caption">
+        <Typography color={lightBlue} fontWeight={"600"} variant="caption">
           {sender.name}
         </Typography>
       )}
+
       {content && <Typography>{content}</Typography>}
-      {attachments.length>0 &&
-      attachments.map((attachment,index)=>{
-        const url=attachment.url;
-        const file=fileFormat(url);
-        return (
+
+      {attachments.length > 0 &&
+        attachments.map((attachment, index) => {
+          const url = attachment.url;
+          const file = fileFormat(url);
+
+          return (
             <Box key={index}>
-                <a
+              <a
                 href={url}
                 target="_blank"
                 download
                 style={{
-                    color:"black",
+                  color: "black",
                 }}
-                >
-                    
-                    {RenderAttachment(file,url)}
-                </a>
+              >
+                {RenderAttachment(file, url)}
+              </a>
             </Box>
-        )
-      })
-      }
-      <Typography variant="caption" color="textSecondary">{timeAgo}</Typography>
-    </div>
+          );
+        })}
+
+      <Typography variant="caption" color={"text.secondary"}>
+        {timeAgo}
+      </Typography>
+    </motion.div>
   );
 };
 

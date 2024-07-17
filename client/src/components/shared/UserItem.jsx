@@ -1,48 +1,56 @@
-import { Avatar, IconButton, ListItem, Stack, Typography } from '@mui/material';
-import React, { memo } from 'react';
-import { Add as AddIcon } from '@mui/icons-material';
+import { Add as AddIcon, Remove as RemoveIcon } from "@mui/icons-material";
+import { Avatar, IconButton, ListItem, Stack, Typography } from "@mui/material";
+import React, { memo } from "react";
+import { transformImage } from "../../lib/features";
 
-const UserItem = ({ user, handler, handlerIsLoading }) => {
+const UserItem = ({
+  user,
+  handler,
+  handlerIsLoading,
+  isAdded = false,
+  styling = {},
+}) => {
   const { name, _id, avatar } = user;
+
   return (
-    <ListItem
-    sx={{
-        bgcolor:"#848884",
-    }}>
+    <ListItem>
       <Stack
         direction={"row"}
         alignItems={"center"}
         spacing={"1rem"}
         width={"100%"}
+        {...styling}
       >
-        <Avatar src={avatar[0]} />
+        <Avatar src={transformImage(avatar)} />
+
         <Typography
           variant="body1"
           sx={{
-            flexGrow: 1,
+            flexGlow: 1,
             display: "-webkit-box",
+            WebkitLineClamp: 1,
             WebkitBoxOrient: "vertical",
             overflow: "hidden",
             textOverflow: "ellipsis",
-            bgcolor:"#848884",
-            widht:"100%"
+            width: "100%",
           }}
         >
           {name}
         </Typography>
+
         <IconButton
           size="small"
           sx={{
-            bgcolor: "primary.main",
+            bgcolor: isAdded ? "error.main" : "primary.main",
             color: "white",
             "&:hover": {
-              bgcolor: "primary.dark",
+              bgcolor: isAdded ? "error.dark" : "primary.dark",
             },
           }}
           onClick={() => handler(_id)}
           disabled={handlerIsLoading}
         >
-          <AddIcon />
+          {isAdded ? <RemoveIcon /> : <AddIcon />}
         </IconButton>
       </Stack>
     </ListItem>

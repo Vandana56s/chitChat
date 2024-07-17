@@ -1,78 +1,91 @@
-import React, { useState } from 'react';
-import { Button, Dialog, DialogTitle, IconButton, List, ListItem, ListItemText, Stack } from '@mui/material';
-import { sampleUsers } from '../styles/styledComponents';
-import { Add as AddIcon, Remove as RemoveIcon } from '@mui/icons-material';
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  Skeleton,
+  Stack,
+  Typography,
+} from "@mui/material";
+import React, { useState } from "react";
+import { sampleUsers } from "../../constants/sampleData";
+import UserItem from "../shared/UserItem";
+import {
+  useAddGroupMembersMutation,
+  useAvailableFriendsQuery,
+} from "../../redux/api/api";
+import { useAsyncMutation, useErrors } from "../../hooks/hook";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsAddMember } from "../../redux/reducers/misc";
+const AddMemberDialog = ({ chatId }) => {
+  const dispatch = useDispatch();
 
-const AddMemberDialog = ({ open, handleClose, addMember, isLoadingAddMember, chatId }) => {
+  const { isAddMember } = useSelector((state) => state.misc);
+
+  const { isLoading, data, isError, error } = useAvailableFriendsQuery(chatId);
+
+  const [addMembers, isLoadingAddMembers] = useAsyncMutation(
+    useAddGroupMembersMutation
+  );
+
   const [selectedMembers, setSelectedMembers] = useState([]);
 
-  const selectMemberHandler = (userId) => {
-    setSelectedMembers((prevSelectedMembers) => {
-      if (prevSelectedMembers.includes(userId)) {
-        return prevSelectedMembers.filter((id) => id !== userId);
-      } else {
-        return [...prevSelectedMembers, userId];
-      }
-    });
+  const selectMemberHandler = (id) => {
+    setSelectedMembers((prev) =>
+      prev.includes(id)
+        ? prev.filter((currElement) => currElement !== id)
+        : [...prev, id]
+    );
   };
 
   const closeHandler = () => {
-    setSelectedMembers([]); // Clear selected members
-    handleClose(); // Close the dialog
+    dispatch(setIsAddMember(false));
   };
-
   const addMemberSubmitHandler = () => {
-    addMember(selectedMembers, chatId);
+    addMembers("Adding Members...", { members: selectedMembers, chatId });
+    closeHandler();
   };
 
+  useErrors([{ isError, error }]);
   return (
-    <Dialog open={open} onClose={closeHandler}>
-      <DialogTitle>Add Member</DialogTitle>
-      <Stack p={"2rem"} width={"25rem"} spacing={"2rem"}>
-        <List>
-          {sampleUsers.map((user) => (
-            <UserItem
-              key={user._id}
-              user={user}
-              handler={() => selectMemberHandler(user._id)}
-              isSelected={selectedMembers.includes(user._id)}
-            />
-          ))}
-        </List>
-        <Stack direction={"row"} justifyContent={"space-evenly"}>
-          <Button variant="text" color="error" onClick={closeHandler}>
+    <Dialog open={isAddMember} onClose={closeHandler}>
+      <Stack p={"2rem"} width={"20rem"} spacing={"2rem"}>
+        <DialogTitle textAlign={"center"}>Add Member</DialogTitle>
+
+        <Stack spacing={"1rem"}>
+          {isLoading ? (
+            <Skeleton />
+          ) : data?.friends?.length > 0 ? (
+            data?.friends?.map((i) => (
+              <UserItem
+                key={i._id}
+                user={i}
+                handler={selectMemberHandler}
+                isAdded={selectedMembers.includes(i._id)}
+              />
+            ))
+          ) : (
+            <Typography textAlign={"center"}>No Friends</Typography>
+          )}
+        </Stack>
+
+        <Stack
+          direction={"row"}
+          alignItems={"center"}
+          justifyContent={"space-evenly"}
+        >
+          <Button color="error" onClick={closeHandler}>
             Cancel
           </Button>
           <Button
-            variant="contained"
             onClick={addMemberSubmitHandler}
-            disabled={isLoadingAddMember}
+            variant="contained"
+            disabled={isLoadingAddMembers}
           >
-            {isLoadingAddMember ? 'Adding...' : 'Add Members'}
+            Submit Changes
           </Button>
         </Stack>
       </Stack>
     </Dialog>
-  );
-};
-
-const UserItem = ({ user, handler, isSelected }) => {
-  const { name } = user;
-  return (
-    <ListItem button onClick={handler}>
-      <ListItemText primary={name} />
-      <IconButton
-        sx={{
-          bgcolor: isSelected ? "secondary.main" : "primary.main",
-          color: "white",
-          "&:hover": {
-            bgcolor: isSelected ? "secondary.dark" : "primary.dark",
-          },
-        }}
-      >
-        {isSelected ? <RemoveIcon /> : <AddIcon />}
-      </IconButton>
-    </ListItem>
   );
 };
 

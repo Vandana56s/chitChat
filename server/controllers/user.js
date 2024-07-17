@@ -6,10 +6,10 @@
  import { Request } from "../models/request.js";
  import { User } from "../models/user.js";
  import {
-//   cookieOptions,
+   cookieOptions,
    emitEvent,
    sendToken,
-//   uploadFilesToCloudinary,
+   uploadFilesToCloudinary,
  } from "../utils/features.js";
  import { ErrorHandler } from "../utils/utility.js";
 

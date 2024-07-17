@@ -1,95 +1,121 @@
-import React, { useState } from 'react';
-import { Avatar, Button, Dialog, DialogTitle, IconButton, ListItem, Stack, TextField, Typography } from '@mui/material';
-import { sampleUsers } from '../styles/styledComponents';
-import { Add as AddIcon, Remove as RemoveIcon } from '@mui/icons-material';
+import { useInputValidation } from "6pp";
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  Skeleton,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import React, { useState } from "react";
+import { sampleUsers } from "../../constants/sampleData";
+import UserItem from "../shared/UserItem";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  useAvailableFriendsQuery,
+  useNewGroupMutation,
+} from "../../redux/api/api";
+import { useAsyncMutation, useErrors } from "../../hooks/hook";
+import { setIsNewGroup } from "../../redux/reducers/misc";
+import toast from "react-hot-toast";
 
 const NewGroup = () => {
-  const [groupName, setGroupName] = useState("");
+  const { isNewGroup } = useSelector((state) => state.misc);
+  const dispatch = useDispatch();
+
+  const { isError, isLoading, error, data } = useAvailableFriendsQuery();
+  const [newGroup, isLoadingNewGroup] = useAsyncMutation(useNewGroupMutation);
+
+  const groupName = useInputValidation("");
+
   const [selectedMembers, setSelectedMembers] = useState([]);
 
-  const submitHandler = () => {
-    // Handle group creation logic here
-    console.log('Group created with name:', groupName, 'and members:', selectedMembers);
+  const errors = [
+    {
+      isError,
+      error,
+    },
+  ];
+
+  useErrors(errors);
+
+  const selectMemberHandler = (id) => {
+    setSelectedMembers((prev) =>
+      prev.includes(id)
+        ? prev.filter((currElement) => currElement !== id)
+        : [...prev, id]
+    );
   };
 
-  const selectMemberHandler = (userId) => {
-    setSelectedMembers((prevSelectedMembers) => {
-      if (prevSelectedMembers.includes(userId)) {
-        return prevSelectedMembers.filter((id) => id !== userId);
-      } else {
-        return [...prevSelectedMembers, userId];
-      }
+  const submitHandler = () => {
+    if (!groupName.value) return toast.error("Group name is required");
+
+    if (selectedMembers.length < 2)
+      return toast.error("Please Select Atleast 3 Members");
+
+    newGroup("Creating New Group...", {
+      name: groupName.value,
+      members: selectedMembers,
     });
+
+    closeHandler();
+  };
+
+  const closeHandler = () => {
+    dispatch(setIsNewGroup(false));
   };
 
   return (
-    <Dialog open>
-      <Stack p={{ xs: "1rem", sm: "2rem" }} width={"25rem"} spacing={"2rem"}>
-        <DialogTitle textAlign={"center"} variant="h4">New Group</DialogTitle>
+    <Dialog onClose={closeHandler} open={isNewGroup}>
+      <Stack p={{ xs: "1rem", sm: "3rem" }} width={"25rem"} spacing={"2rem"}>
+        <DialogTitle textAlign={"center"} variant="h4">
+          New Group
+        </DialogTitle>
+
         <TextField
           label="Group Name"
-          value={groupName}
-          onChange={(e) => setGroupName(e.target.value)}
+          value={groupName.value}
+          onChange={groupName.changeHandler}
         />
+
         <Typography variant="body1">Members</Typography>
+
         <Stack>
-          {sampleUsers.map((user) => (
-            <UserItem
-              user={user}
-              key={user._id}
-              handler={() => selectMemberHandler(user._id)}
-              isSelected={selectedMembers.includes(user._id)}
-            />
-          ))}
+          {isLoading ? (
+            <Skeleton />
+          ) : (
+            data?.friends?.map((i) => (
+              <UserItem
+                user={i}
+                key={i._id}
+                handler={selectMemberHandler}
+                isAdded={selectedMembers.includes(i._id)}
+              />
+            ))
+          )}
         </Stack>
+
         <Stack direction={"row"} justifyContent={"space-evenly"}>
-          <Button variant="text" color="error" size="large">Cancel</Button>
-          <Button variant="contained" size="large" onClick={submitHandler}>Create</Button>
+          <Button
+            variant="text"
+            color="error"
+            size="large"
+            onClick={closeHandler}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            size="large"
+            onClick={submitHandler}
+            disabled={isLoadingNewGroup}
+          >
+            Create
+          </Button>
         </Stack>
       </Stack>
     </Dialog>
-  );
-};
-
-const UserItem = ({ user, handler, isSelected }) => {
-  const { name, avatar } = user;
-  return (
-    <ListItem>
-      <Stack
-        direction={"row"}
-        alignItems={"center"}
-        spacing={"1rem"}
-        width={"100%"}
-      >
-        <Avatar src={avatar[0]} />
-        <Typography
-          variant="body1"
-          sx={{
-            flexGrow: 1,
-            display: "-webkit-box",
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            width: "100%",
-          }}
-        >
-          {name}
-        </Typography>
-        <IconButton
-          size="small"
-          sx={{
-            bgcolor: isSelected ? "secondary.main" : "primary.main",
-            color: "white",
-            "&:hover": {
-              bgcolor: isSelected ? "secondary.dark" : "primary.dark",
-            },
-          }}
-          onClick={handler}
-        >
-          {isSelected ? <RemoveIcon /> : <AddIcon />}
-        </IconButton>
-      </Stack>
-    </ListItem>
   );
 };
 

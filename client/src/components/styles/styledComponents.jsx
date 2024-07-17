@@ -1,184 +1,77 @@
-import { styled } from '@mui/material/styles';
-import { Link as LinkComponent } from 'react-router-dom';
-import { grayColor } from '../../constants/color';
+import { Skeleton, keyframes, styled } from "@mui/material";
+import { Link as LinkComponent } from "react-router-dom";
+import { grayColor, matBlack } from "../../constants/color";
 
-export const VisuallyHiddenInput = styled('input')({
+const VisuallyHiddenInput = styled("input")({
   border: 0,
-  clip: 'rect(0 0 0 0)',
+  clip: "rect(0 0 0 0)",
   height: 1,
   margin: -1,
-  overflow: 'hidden',
-  position: 'absolute',
-  whiteSpace: 'nowrap',
+  overflow: "hidden",
+  padding: 0,
+  position: "absolute",
+  whiteSpace: "nowrap",
   width: 1,
 });
 
-export const Link = styled(LinkComponent)`
+const Link = styled(LinkComponent)`
   text-decoration: none;
   color: black;
   padding: 1rem;
   &:hover {
-    background-color: #f0f0f0;
+    background-color: rgba(0, 0, 0, 0.1);
   }
 `;
 
-export const InputBox = styled("input")`
+const InputBox = styled("input")`
   width: 100%;
   height: 100%;
   border: none;
   outline: none;
-  padding: 0.3rem;
+  padding: 0 3rem;
   border-radius: 1.5rem;
   background-color: ${grayColor};
 `;
 
-export const SearchField = styled("input")`
+const SearchField = styled("input")`
+  padding: 1rem 2rem;
   width: 20vmax;
   border: none;
   outline: none;
-  padding: 1rem 2rem;
   border-radius: 1.5rem;
   background-color: ${grayColor};
   font-size: 1.1rem;
 `;
 
-export const CurveButton = styled("button")`
-  width: 20vmax;
+const CurveButton = styled("button")`
+  border-radius: 1.5rem;
+  padding: 1rem 2rem;
   border: none;
   outline: none;
-  padding: 1rem 2rem;
   cursor: pointer;
-  border-radius: 1.5rem;
+  background-color: ${matBlack};
   color: white;
-  background-color: black;
   font-size: 1.1rem;
   &:hover {
     background-color: rgba(0, 0, 0, 0.8);
   }
 `;
 
+const bounceAnimation = keyframes`
+0% { transform: scale(1); }
+50% { transform: scale(1.5); }
+100% { transform: scale(1); }
+`;
 
-export const sampleChats = [
-  {
-    avatar: ["https://cdn.pixabay.com/photo/2014/04/03/10/32/user-310807_1280.png"],
-    name: "sakshi",
-    _id: "1",
-    groupChat: false,
-    members: ["1", "2"],
-  },
-  {
-    avatar: ["https://cdn.pixabay.com/photo/2014/03/25/16/24/female-296989_1280.png"],
-    name: "vandana",
-    _id: "2",
-    groupChat: true,
-    members: ["1", "2"],
-  },
-  {
-    avatar: ["https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359554_1280.png"],
-    name: "aakansha",
-    _id: "3",
-    groupChat: false,
-    members: ["3", "4"],
-  }
-];
+const BouncingSkeleton = styled(Skeleton)(() => ({
+  animation: `${bounceAnimation} 1s infinite`,
+}));
 
-export const sampleUsers = [
-  {
-    avatar: ["https://cdn.pixabay.com/photo/2014/04/03/10/32/user-310807_1280.png"],
-    name: "sakshi",
-    _id: "1",
-  },
-  {
-    avatar: ["https://cdn.pixabay.com/photo/2014/03/25/16/24/female-296989_1280.png"],
-    name: "vandana",
-    _id: "2",
-  },
-  {
-    avatar: ["https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359554_1280.png"],
-    name: "aakansha",
-    _id: "3",
-  }
-];
-
-export const sampleNotifications = [
-  {
-    sender: {
-      avatar: ["https://cdn.pixabay.com/photo/2014/04/03/10/32/user-310807_1280.png"],
-      name: "sakshi",
-    },
-    _id: "1",
-  },
-  {
-    sender: {
-      avatar: ["https://cdn.pixabay.com/photo/2014/03/25/16/24/female-296989_1280.png"],
-      name: "vandana",
-    },
-    _id: "2",
-  },
-  {
-    sender: {
-      avatar: ["https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359554_1280.png"],
-      name: "aakansha",
-    },
-    _id: "3",
-  }
-];
-export const sampleMessage = [
-  {
-    attachments: [
-     // {
-      //  public_id: "ashdjd",
-       // url: "https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359554_1280.png",
-     // }
-    ],
-    content: "hi sakshi! abe ush din wali pic send krna .",
-    _id: "dfddjdndbdbdbd",
-    sender: {
-      _id: "user.id",
-      name: "vandana",
-    },
-    chat: "chatId",
-    createdAt: "2024-03-12T10:41:30.630Z" // Corrected createdAt key
-  },
-  {
-    attachments: [
-      {
-        public_id: "ashdjd",
-        url: "https://cdn.pixabay.com/photo/2014/04/03/10/32/user-310807_1280.png",
-      }
-    ],
-    content: "",
-    _id: "dfddjdndbdbdbd",
-    sender: {
-      _id: "dfdfdfd",
-      name: "chaman 2",
-    },
-    chat: "chatId",
-    createdAt: "2024-03-12T10:41:30.630Z" // Corrected createdAt key
-  }
-];
-
-// Corrected dashboardData export
-  export const dashboardData = {
-  users: [
-    {
-      name: "sakshi",
-      avatar: "https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359554_1280.png",
-      _id: "1",
-      username: "sakshi_rai",
-      friends: 20,
-      groups: 5,
-    },
-    {
-      name: "vandana",
-      avatar: "https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359554_1280.png",
-      _id: "2",
-      username: "vandana",
-      friends: 100,
-      groups: 50,
-    },
-  ],
+export {
+  CurveButton,
+  SearchField,
+  InputBox,
+  Link,
+  VisuallyHiddenInput,
+  BouncingSkeleton,
 };
-
-
-
